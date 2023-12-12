@@ -7,7 +7,7 @@ import (
 	"text/template"
 )
 
-const YearsDir string = "/Users/wcranston/gitrepos/advent-of-code-go"
+const YearsDir string = "./"
 const solutionTemplate string = `package year{{.Year}}
 
 import (

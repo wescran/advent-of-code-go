@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math"
 	"regexp"
-	"strconv"
 	"strings"
 
 	aoc "github.com/wescran/advent-of-code-go"
@@ -16,24 +15,29 @@ type Point struct {
 	x int
 	y int
 }
+type Pair struct {
+	a int
+	b int
+}
 
 func (s *Solution202311) part1(galMap []Point) {
 	sum := 0
-	pairMap := make(map[string]float64)
+	pairMap := make(map[Pair]float64)
+	check := 0
 	for a, galA := range galMap {
 		for b, galB := range galMap {
-			fmt.Println(galA, galB)
 			if galA == galB {
 				continue
 			}
-			_, foundA := pairMap[strconv.Itoa(a)+strconv.Itoa(b)]
-			_, foundB := pairMap[strconv.Itoa(b)+strconv.Itoa(a)]
+			_, foundA := pairMap[Pair{a,b}]
+			_, foundB := pairMap[Pair{b,a}]
 			if foundA || foundB {
 				continue
 			}
 			dist := math.Abs(float64(galA.x)-float64(galB.x)) + math.Abs(float64(galA.y)-float64(galB.y))
-			pairMap[strconv.Itoa(a)+strconv.Itoa(b)] = dist
-			pairMap[strconv.Itoa(b)+strconv.Itoa(a)] = dist
+			pairMap[Pair{a,b}] = dist
+			pairMap[Pair{b,a}] = dist
+			check += 2
 			sum += int(dist)
 		}
 	}
@@ -65,7 +69,7 @@ func (s *Solution202311) Solve() error {
 				}
 			}
 		} else {
-			expansions++
+			expansions += 999999
 		}
 		expanY[y] = expansions
 	}
@@ -74,7 +78,7 @@ func (s *Solution202311) Solve() error {
 		x := 0
 		for i, char := range line {
 			if _, found := emptyMap[i]; found {
-				x++
+				x += 999999
 			}
 			if char == rune('#') {
 				galMap = append(galMap, Point{x + i, y + expansion})
